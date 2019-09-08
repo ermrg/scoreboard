@@ -7,7 +7,8 @@ let config = {
     storageBucket: "scoreboard-63d58.appspot.com",
     messagingSenderId: "548054158782",
     appId: "1:548054158782:web:a41fec965fe74fbf1dfdef"
-  }
+  },
+  hosts: "http://localhost:3000"
 };
 
 export default config;

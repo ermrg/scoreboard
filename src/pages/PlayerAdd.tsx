@@ -355,11 +355,7 @@ function PlayerAdd(props: Props) {
                 </FormControl>
               </Grid>
             </form>
-            <Box mt={4} className={classes.footer}>
-              <Button onClick={() => history.push("/login")}>
-                {"Click here if you already have an account"}
-              </Button>
-            </Box>
+            
           </Box>
 
         )}

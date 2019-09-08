@@ -1,10 +1,9 @@
-// import * as Sentry from "@sentry/browser";
+import * as Sentry from "@sentry/browser";
 import React, { useContext, useState } from "react";
 import { RouteComponentProps, withRouter } from "react-router";
-import { makeStyles, Link } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
-// import validator from "validator";
-import HomeIcon from "@material-ui/icons/Home";
+import validator from "validator";
 import green from "@material-ui/core/colors/green";
 import { Theme } from "@material-ui/core/styles/createMuiTheme";
 import FormControl from "@material-ui/core/FormControl";
@@ -14,12 +13,10 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import TextField from "@material-ui/core/TextField";
 import IconButton from "@material-ui/core/IconButton";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
-import firebase from "./firebaseApp";
-// import { authErrorMessages } from "./authErrorMessages";
+import firebase from "../firebaseApp";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
-import { AuthContext } from "./Auth/AuthProvider";
-import config from "./config";
+import { AuthContext } from "./AuthProvider";
 
 const useStyles = makeStyles((theme: Theme) => ({
   formError: {
@@ -67,7 +64,7 @@ interface Props extends RouteComponentProps {
   handleCreateUser: any;
 }
 
-function PlayerAdd(props: Props) {
+function CreateAccountComponent(props: Props) {
   const classes = useStyles();
 
   const { history, location, handleCreateUser } = props;
@@ -143,14 +140,12 @@ function PlayerAdd(props: Props) {
       setUser(currentUser);
       redirectToTargetPage();
     } catch (error) {
-      // Sentry.captureMessage(
-      //   `Create Account Error: ${JSON.stringify(error)}`,
-      //   Sentry.Severity.Fatal
-      // );
-      // const errorMessage =
-      //   authErrorMessages[error.code] ||
-      //   `アカウントの作成に失敗しました。エラーメッセージ: ${error}`;
-      // handleErrors({ form: errorMessage });
+      Sentry.captureMessage(
+        `Create Account Error: ${JSON.stringify(error)}`,
+        Sentry.Severity.Fatal
+      );
+      const errorMessage = `アカウントの作成に失敗しました。エラーメッセージ: ${error}`;
+      handleErrors({ form: errorMessage });
       loadingDone();
     }
   };
@@ -158,17 +153,17 @@ function PlayerAdd(props: Props) {
   const validateForm = () => {
     const errors: { [key: string]: string } = {};
 
-    // if (!validator.trim(values.name)) {
-    //   errors.name = t("Required");
-    // }
+    if (!validator.trim(values.name)) {
+      errors.name = "Required";
+    }
 
-    // if (!validator.trim(values.email)) {
-    //   errors.email = t("Required");
-    // }
+    if (!validator.trim(values.email)) {
+      errors.email = "Required";
+    }
 
-    // if (!validator.trim(values.password)) {
-    //   errors.password = t("Required");
-    // }
+    if (!validator.trim(values.password)) {
+      errors.password = "Required";
+    }
 
     handleErrors(errors);
 
@@ -202,20 +197,119 @@ function PlayerAdd(props: Props) {
   return (
     <Box m={1} mt={10}>
       <Typography component="h1" variant="h5" gutterBottom>
-        <IconButton>
-          <HomeIcon />
+        <IconButton onClick={() => history.goBack()}>
+          <ArrowBackIcon />
         </IconButton>
-        {"Home"}
+        {"Create Account"}
       </Typography>
-      <Link
-        color="inherit"
-        underline="always"
-        href={`${config.hosts}/player-add`}
-      >
-        Private Route
-              </Link>
+
+      <form noValidate onSubmit={handleSubmit}>
+        {errors.form ? (
+          <Typography
+            variant="body1"
+            gutterBottom
+            className={classes.formError}
+          >
+            {errors.form}
+          </Typography>
+        ) : (
+          ""
+        )}
+
+        <TextField
+          id="name"
+          name="name"
+          label={"OName"}
+          placeholder=""
+          fullWidth
+          margin="normal"
+          variant="outlined"
+          InputLabelProps={{
+            shrink: true
+          }}
+          value={values.name}
+          onChange={handleChange}
+          error={!!errors.name}
+        />
+        {errors.name && (
+          <FormHelperText className={classes.formHelperText} error>
+            {errors.name}
+          </FormHelperText>
+        )}
+
+        <TextField
+          id="email"
+          name="email"
+          type="email"
+          label={"Email"}
+          placeholder=""
+          fullWidth
+          margin="normal"
+          variant="outlined"
+          InputLabelProps={{
+            shrink: true
+          }}
+          value={values.email}
+          onChange={handleChange}
+          error={!!errors.email}
+        />
+        {errors.email && (
+          <FormHelperText className={classes.formHelperText} error>
+            {errors.email}
+          </FormHelperText>
+        )}
+
+        <TextField
+          id="password"
+          name="password"
+          type="password"
+          label={"Password"}
+          placeholder=""
+          fullWidth
+          margin="normal"
+          variant="outlined"
+          InputLabelProps={{
+            shrink: true
+          }}
+          value={values.password}
+          onChange={handleChange}
+          error={!!errors.password}
+        />
+        {errors.password && (
+          <FormHelperText className={classes.formHelperText} error>
+            {errors.password}
+          </FormHelperText>
+        )}
+
+        <Grid container justify="center" alignItems="center">
+          <FormControl margin="normal" className={classes.formActions}>
+            <div className={classes.buttonWrapper}>
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                size="large"
+                disabled={loading}
+              >
+                {"Create"}
+              </Button>
+              {loading && (
+                <CircularProgress
+                  size={24}
+                  className={classes.buttonProgress}
+                />
+              )}
+            </div>
+          </FormControl>
+        </Grid>
+      </form>
+      <Box mt={4} className={classes.footer}>
+        <Button onClick={() => history.push("/login")}>
+          {"Click here if you already have an account"}
+        </Button>
+      </Box>
     </Box>
   );
 }
 
-export default (withRouter(PlayerAdd));
+export default (withRouter(CreateAccountComponent));

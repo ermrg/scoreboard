@@ -10,6 +10,10 @@ import Header from './pages/layouts/Header';
 import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 import MuiThemeProvider from "@material-ui/core/styles/MuiThemeProvider";
 import { AuthProvider } from './pages/Auth/AuthProvider';
+import PrivateRoute from './pages/Auth/PrivateRoute';
+import Auth from './pages/Auth/Auth';
+import CreateAccount from './pages/Auth/CreateAccount';
+import Login from './pages/Auth/Login';
 
 const theme = createMuiTheme({
     palette: {
@@ -29,8 +33,11 @@ ReactDOM.render(
                 <Header />
                 <div style={{ marginTop: "64px" }}>
                     <Switch>
+                        <Route exact path="/auth" component={Auth} />
+                        <Route exact path="/login" component={Login} />
+                        <Route exact path="/create-account" component={CreateAccount} />
                         <Route exact path="/" component={Home} />
-                        <Route exact path="/player-add" component={PlayerAdd} />
+                        <PrivateRoute exact path="/player-add" component={PlayerAdd} />
                     </Switch>
                 </div>
             </AuthProvider>
@@ -38,7 +45,7 @@ ReactDOM.render(
     </MuiThemeProvider>
     , document.getElementById('root'));
 
-    // If you want your app to work offline and load faster, you can change
-    // unregister() to register() below. Note this comes with some pitfalls.
-    // Learn more about service workers: https://bit.ly/CRA-PWA
-    serviceWorker.unregister();
+// If you want your app to work offline and load faster, you can change
+// unregister() to register() below. Note this comes with some pitfalls.
+// Learn more about service workers: https://bit.ly/CRA-PWA
+// serviceWorker.unregister();
