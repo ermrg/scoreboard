@@ -92,6 +92,9 @@ const useStyles = makeStyles({
     },
     cancelChip: {
         marginLeft: 10
+    },
+    addPlayersButton: {
+
     }
 });
 
@@ -165,6 +168,19 @@ function TeamDetail(props: Props) {
                                     </div>
                                 </div>
                                 <div>
+
+                                <Button
+                                className={classes.addPlayersButton}
+                                        size="small"
+                                        color="secondary"
+                                        variant="outlined"
+                                        disabled={!!team.name && team.deleted}
+                                        onClick={() =>
+                                            history.push(`/team/players/${match.params.id}`)
+                                        }
+                                    >
+                                        {"Players"}
+                                    </Button>
                                     <Button
                                         size="small"
                                         color="primary"
