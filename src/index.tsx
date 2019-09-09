@@ -15,6 +15,10 @@ import Login from './pages/Auth/Login';
 import PlayerList from './pages/Player/PlayerList';
 import PlayerDetail from './pages/Player/PlayerDetail';
 import PlayerEdit from './pages/Player/PlayerEdit';
+import TeamList from './pages/Team/TeamList';
+import TeamAdd from './pages/Team/TeamAdd';
+import TeamDetail from './pages/Team/TeamDetail';
+import TeamEdit from './pages/Team/TeamEdit';
 
 const theme = createMuiTheme({
     palette: {
@@ -38,10 +42,18 @@ ReactDOM.render(
                         <Route exact path="/login" component={Login} />
                         <Route exact path="/create-account" component={CreateAccount} />
                         <Route exact path="/" component={Home} />
+
+                        {/*  Players */}
                         <PrivateRoute exact path="/players" component={PlayerList} />
                         <PrivateRoute exact path="/player/add" component={PlayerAdd} />
                         <PrivateRoute exact path="/player/detail/:id" component={PlayerDetail} />
                         <PrivateRoute exact path="/player/edit/:id" component={PlayerEdit} />
+
+                        {/*  Teams */}
+                        <PrivateRoute exact path="/teams" component={TeamList} />
+                        <PrivateRoute exact path="/team/add" component={TeamAdd} />
+                        <PrivateRoute exact path="/team/detail/:id" component={TeamDetail} />
+                        <PrivateRoute exact path="/team/edit/:id" component={TeamEdit} />
                     </Switch>
                 </div>
             </AuthProvider>

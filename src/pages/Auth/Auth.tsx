@@ -6,13 +6,9 @@ import { Theme } from "@material-ui/core/styles/createMuiTheme";
 import Fab from "@material-ui/core/Fab";
 import Link from "@material-ui/core/Link";
 import Typography from "@material-ui/core/Typography";
-
-// import gimmyLogo from "../assets/images/gimmy_white.svg";
 import CircularProgress from "@material-ui/core/CircularProgress";
-// import authBg from "../assets/images/auth_bg.png";
 import { AuthContext } from "./AuthProvider";
 import firebase, { timestamp, db } from "../firebaseApp";
-import logo from '../../assets/images/logo.png';
 
 const useStyles = makeStyles((theme: Theme) => ({
   top: {

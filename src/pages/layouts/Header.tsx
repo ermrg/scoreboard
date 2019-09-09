@@ -15,12 +15,7 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import Drawer from "@material-ui/core/Drawer";
 import HomeIcon from "@material-ui/icons/Home";
-import PermIdentityIcon from "@material-ui/icons/PermIdentity";
-import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import PeopleIcon from '@material-ui/icons/People';
-import FitnessCenterIcon from "@material-ui/icons/FitnessCenter";
-import SettingsIcon from "@material-ui/icons/Settings";
-import SupervisedUserCircleIcon from "@material-ui/icons/SupervisedUserCircle";
 import InputIcon from "@material-ui/icons/Input";
 import { AuthContext } from "../Auth/AuthProvider";
 import firebase from "../firebaseApp";
@@ -199,6 +194,16 @@ function Header(props: Props) {
             </React.Fragment>
           )}
           
+          {!loadingAuthState && authenticated && (
+            <React.Fragment>
+              <HeaderMenuItem
+                text="Teams"
+                onClick={() => moveToPage("/teams")}
+                icon={<PeopleIcon />}
+              />
+            </React.Fragment>
+          )}
+
           {!loadingAuthState && authenticated && (
             <HeaderMenuItem
               text="Logout"

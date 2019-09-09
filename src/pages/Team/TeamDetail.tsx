@@ -95,19 +95,19 @@ const useStyles = makeStyles({
     }
 });
 
-interface IPlayer {
+interface ITeam {
     name: string,
-    height: string,
+    manager: string,
     deleted?: boolean
 }
 
 interface Props extends RouteComponentProps<{ id: string }> { }
 
-function PlayerDetail(props: Props) {
+function TeamDetail(props: Props) {
     const classes = useStyles();
 
     const { history, match } = props;
-    const [profileData, setProfileData] = useState({} as IPlayer);
+    const [team, setTeamData] = useState({} as ITeam);
     const [selectedTab, setSelectedTab] = useState(1);
 
     useEffect(() => {
@@ -116,11 +116,11 @@ function PlayerDetail(props: Props) {
 
     const getPlayerProfile = async () => {
         const customerDoc = await db
-            .collection("players")
+            .collection("teams")
             .doc(match.params.id)
             .get();
         if (customerDoc.exists) {
-            setProfileData(customerDoc.data() as IPlayer);
+            setTeamData(customerDoc.data() as ITeam);
         }
     };
     const changeTab = (tabIndex: number) => {
@@ -139,22 +139,22 @@ function PlayerDetail(props: Props) {
                     <IconButton onClick={() => history.goBack()}>
                         <ArrowBackIcon />
                     </IconButton>
-                    {"Player details"}
+                    {"Team details"}
                 </Typography>
 
-                {profileData.name && (
+                {team.name && (
                     <React.Fragment>
                         <div className={classes.profileCard}>
                             <Avatar
-                                alt={profileData.name}
+                                alt={team.name}
                                 src={defaultProfilePhoto}
                                 className={classes.photo}
                             />
                             <div className={classes.profileCardInfo}>
                                 <div>
                                     <div className={classes.profileCardName}>
-                                        {profileData.name}
-                                        {!!profileData.name && profileData.deleted && (
+                                        {team.name}
+                                        {!!team.name && team.deleted && (
                                             <Chip
                                                 label={"Deleted"}
                                                 size="small"
@@ -169,9 +169,9 @@ function PlayerDetail(props: Props) {
                                         size="small"
                                         color="primary"
                                         variant="outlined"
-                                        disabled={!!profileData.name && profileData.deleted}
+                                        disabled={!!team.name && team.deleted}
                                         onClick={() =>
-                                            history.push(`/player/edit/${match.params.id}`)
+                                            history.push(`/team/edit/${match.params.id}`)
                                         }
                                     >
                                         {"Edit"}
@@ -189,7 +189,7 @@ function PlayerDetail(props: Props) {
                                 )}
                                 onClick={() => changeTab(1)}
                             >
-                                {"Profile"}
+                                {"Players"}
                             </Button>
                             <Button
                                 className={classNames(
@@ -218,7 +218,7 @@ function PlayerDetail(props: Props) {
                                 <ListItem disableGutters={true}>
                                     <ListItemText
                                         primary={"Email"}
-                                        secondary={profileData.name}
+                                        secondary={team.name}
                                     />
                                 </ListItem>
                             </List>
@@ -228,10 +228,10 @@ function PlayerDetail(props: Props) {
                             <List disablePadding={true}>
                                 <ListItem disableGutters={true}>
                                     <ListItemText
-                                        primary={"Height"}
+                                        primary={"manager"}
                                         secondary={
-                                            profileData.height
-                                                ? `${profileData.height}cm`
+                                            team.manager
+                                                ? `${team.manager}cm`
                                                 : "Blank"
                                         }
                                     />
@@ -249,4 +249,4 @@ function PlayerDetail(props: Props) {
         </React.Fragment>
     );
 }
-export default (withRouter(PlayerDetail));
+export default (withRouter(TeamDetail));

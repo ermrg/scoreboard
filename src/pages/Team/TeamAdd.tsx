@@ -75,28 +75,26 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-interface Player {
+interface Team {
   name: string,
-  height: string,
+  manager: string,
 }
 
-interface FormErrors extends Player {
+interface FormErrors extends Team {
   form: string;
 }
 
-interface Props extends RouteComponentProps {
-  handleCreateUser: any;
-}
+interface Props extends RouteComponentProps { }
 
-function PlayerAdd(props: Props) {
+function TeamAdd(props: Props) {
   const classes = useStyles();
 
   const { history } = props;
 
   const [values, setValues] = useState({
     name: "",
-    height: ""
-  } as Player);
+    manager: ""
+  } as Team);
 
   const [errors, setErrors] = useState({} as FormErrors);
   const [loading, setLoading] = useState(false);
@@ -118,15 +116,15 @@ function PlayerAdd(props: Props) {
       return;
     }
 
-    createPlayer();
+    createTeam();
   };
 
-  const createPlayer = async () => {
+  const createTeam = async () => {
     try {
-      db.collection("players")
+      db.collection("teams")
         .add({
           name: values.name,
-          height: values.height,
+          manager: values.manager,
           deleted: false,
           createdAt: timestamp()
         })
@@ -151,8 +149,8 @@ function PlayerAdd(props: Props) {
       errors.name = "Required";
     }
 
-    if (!validator.trim(values.height)) {
-      errors.height = "Required";
+    if (!validator.trim(values.manager)) {
+      errors.manager = "Required";
     }
     handleErrors(errors);
 
@@ -172,7 +170,7 @@ function PlayerAdd(props: Props) {
   };
 
   const redirectToTargetPage = () => {
-    let prevPath = "/players";
+    let prevPath = "/teams";
     history.push(prevPath);
   };
 
@@ -188,11 +186,11 @@ function PlayerAdd(props: Props) {
           <IconButton onClick={() => history.goBack()}>
             <ArrowBackIcon />
           </IconButton>
-          {"Player Add"}
+          {"Team Add"}
 
           <IconButton
             className={classes.addButton}
-            onClick={() => history.push("/player/add")}
+            onClick={() => history.push("/team/add")}
           >
             <AddCircleOutlineIcon />
           </IconButton>
@@ -234,10 +232,10 @@ function PlayerAdd(props: Props) {
             )}
 
             <TextField
-              id="height"
-              name="height"
-              type="height"
-              label={"Height"}
+              id="manager"
+              name="manager"
+              type="manager"
+              label={"Manager"}
               placeholder=""
               fullWidth
               margin="normal"
@@ -245,13 +243,13 @@ function PlayerAdd(props: Props) {
               InputLabelProps={{
                 shrink: true
               }}
-              value={values.height}
+              value={values.manager}
               onChange={handleChange}
-              error={!!errors.height}
+              error={!!errors.manager}
             />
-            {errors.height && (
+            {errors.manager && (
               <FormHelperText className={classes.formHelperText} error>
-                {errors.height}
+                {errors.manager}
               </FormHelperText>
             )}
 
@@ -284,4 +282,4 @@ function PlayerAdd(props: Props) {
   );
 }
 
-export default (withRouter(PlayerAdd));
+export default (withRouter(TeamAdd));
