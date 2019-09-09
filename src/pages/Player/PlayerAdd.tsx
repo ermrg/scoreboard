@@ -3,7 +3,7 @@ import React, { useContext, useState } from "react";
 import { RouteComponentProps, withRouter } from "react-router";
 import { makeStyles } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
-// import validator from "validator";
+import validator from "validator";
 import green from "@material-ui/core/colors/green";
 import { Theme } from "@material-ui/core/styles/createMuiTheme";
 import FormControl from "@material-ui/core/FormControl";
@@ -13,17 +13,37 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import TextField from "@material-ui/core/TextField";
 import IconButton from "@material-ui/core/IconButton";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
-import firebase, { timestamp, db } from "./firebaseApp";
+import firebase, { timestamp, db } from "../firebaseApp";
 // import { authErrorMessages } from "./authErrorMessages";
+import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
+
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
-import { AuthContext } from "./Auth/AuthProvider";
+import { AuthContext } from "../../_components";
 import { async } from "q";
 
 const useStyles = makeStyles((theme: Theme) => ({
   formError: {
     color: theme.palette.error.main
   },
+  pageHeading: {
+    borderBottom: "1px solid #bbb",
+    position: "relative",
+    boxShadow: "0px 0px 3px #bbb",
+    padding: "6px 10px 0px 10px",
+    height: "40px",
+},
+pageHeadingTitle:{
+
+},
+addButton: {
+  position: "absolute",
+  right: "5px",
+  bottom: 0
+},
+backButton: {
+  padding: 0
+},
   buttonWrapper: {
     position: "relative",
     display: "inline-block"
@@ -119,10 +139,11 @@ function PlayerAdd(props: Props) {
         })
         .then(() => {
           setDone(true)
+          redirectToTargetPage()
         })
         .catch((reason: any) => {
           handleErrors({
-            form: `メニューの登録に失敗しました。お手数をおかけしますが、しばらくしてから再度お試しください。${reason}`
+            form: `${reason}`
           });
         })
         .then(() => loadingDone());
@@ -137,7 +158,7 @@ function PlayerAdd(props: Props) {
       }
 
       if (error.code !== "auth/user-not-found") {
-        const errorMessage = `認証時にエラーが発生しました。エラーメッセージ: ${error}`;
+        const errorMessage = `${error}`;
         handleErrors({ form: errorMessage });
         loadingDone();
         return;
@@ -145,73 +166,16 @@ function PlayerAdd(props: Props) {
     }
   }
 
-  // const createAccount = async () => {
-  //   try {
-  //     const result = await firebase
-  //       .auth()
-  //       .signInWithEmailAndPassword(values.email, values.password);
-
-  //     if (result && result.user) {
-  //       setUser(result.user);
-  //       redirectToTargetPage();
-  //     }
-  //   } catch (error) {
-  //     if (error.code === "auth/wrong-password") {
-  //       handleErrors({
-  //         form:
-  //           "メールアドレスが登録済みです。ログイン画面からログインしてください。"
-  //       });
-  //       loadingDone();
-  //       return;
-  //     }
-
-  //     if (error.code !== "auth/user-not-found") {
-  //       const errorMessage = `認証時にエラーが発生しました。エラーメッセージ: ${error}`;
-  //       handleErrors({ form: errorMessage });
-  //       loadingDone();
-  //       return;
-  //     }
-  //   }
-
-  //   try {
-  //     const userCredential: firebase.auth.UserCredential = await firebase
-  //       .auth()
-  //       .createUserWithEmailAndPassword(values.email, values.password);
-
-  //     const currentUser = userCredential.user!;
-
-  //     await handleCreateUser(currentUser, values.name);
-
-  //     setUser(currentUser);
-  //     redirectToTargetPage();
-  //   } catch (error) {
-  //     // Sentry.captureMessage(
-  //     //   `Create Account Error: ${JSON.stringify(error)}`,
-  //     //   Sentry.Severity.Fatal
-  //     // );
-  //     // const errorMessage =
-  //     //   authErrorMessages[error.code] ||
-  //     //   `アカウントの作成に失敗しました。エラーメッセージ: ${error}`;
-  //     // handleErrors({ form: errorMessage });
-  //     loadingDone();
-  //   }
-  // };
-
   const validateForm = () => {
     const errors: { [key: string]: string } = {};
 
-    // if (!validator.trim(values.name)) {
-    //   errors.name = t("Required");
-    // }
+    if (!validator.trim(values.name)) {
+      errors.name = "Required";
+    }
 
-    // if (!validator.trim(values.email)) {
-    //   errors.email = t("Required");
-    // }
-
-    // if (!validator.trim(values.password)) {
-    //   errors.password = t("Required");
-    // }
-
+    if (!validator.trim(values.height)) {
+      errors.height = "Required";
+    }
     handleErrors(errors);
 
     return Object.keys(errors).length === 0;
@@ -230,7 +194,7 @@ function PlayerAdd(props: Props) {
   };
 
   const redirectToTargetPage = () => {
-    let prevPath = "/";
+    let prevPath = "/players";
     const storagePrePath = sessionStorage.getItem("prevPath");
     if (storagePrePath) {
       prevPath = storagePrePath;
@@ -268,13 +232,23 @@ function PlayerAdd(props: Props) {
             )}
         </div>
       ) : (
-          <Box m={1} mt={10}>
-            <Typography component="h1" variant="h5" gutterBottom>
-              <IconButton onClick={() => history.goBack()}>
-                <ArrowBackIcon />
-              </IconButton>
-              {"Player Add"}
-            </Typography>
+          <Box>
+            <div className={classes.pageHeading}>
+                <Typography
+                    variant="h5"
+                    component="h2"
+                    className={classes.pageHeadingTitle}>
+                  
+              Players Add
+                </Typography>
+
+                <IconButton
+                    className={classes.addButton}
+                    onClick={() => history.push("/player/add")}
+                >
+                    <AddCircleOutlineIcon />
+                </IconButton>
+            </div>
 
             <form noValidate onSubmit={handleSubmit}>
               {errors.form ? (

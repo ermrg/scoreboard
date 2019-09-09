@@ -17,6 +17,7 @@ import Drawer from "@material-ui/core/Drawer";
 import HomeIcon from "@material-ui/icons/Home";
 import PermIdentityIcon from "@material-ui/icons/PermIdentity";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
+import PeopleIcon from '@material-ui/icons/People';
 import FitnessCenterIcon from "@material-ui/icons/FitnessCenter";
 import SettingsIcon from "@material-ui/icons/Settings";
 import SupervisedUserCircleIcon from "@material-ui/icons/SupervisedUserCircle";
@@ -188,15 +189,15 @@ function Header(props: Props) {
         />
         <Divider />
         <List>
-          {/* {!loadingAuthState && authenticated && ( */}
+          {!loadingAuthState && authenticated && (
             <React.Fragment>
               <HeaderMenuItem
-                text="Player Add"
-                onClick={() => moveToPage("/player-add")}
-                icon={<CalendarTodayIcon />}
+                text="Players"
+                onClick={() => moveToPage("/players")}
+                icon={<PeopleIcon />}
               />
             </React.Fragment>
-          {/* )} */}
+          )}
           
           {!loadingAuthState && authenticated && (
             <HeaderMenuItem

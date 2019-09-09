@@ -16,7 +16,7 @@ import firebase from "../firebaseApp";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 import * as Sentry from "@sentry/browser";
-import { AuthContext } from "./AuthProvider";
+import { AuthContext } from "../../_components";
 
 const useStyles = makeStyles((theme: Theme) => ({
   formError: {

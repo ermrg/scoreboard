@@ -1,0 +1,1 @@
+export { AuthContext } from "../pages/Auth/AuthProvider";

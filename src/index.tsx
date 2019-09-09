@@ -1,9 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
 import Home from './pages/Home';
-import PlayerAdd from './pages/PlayerAdd';
+import PlayerAdd from './pages/Player/PlayerAdd';
 import * as serviceWorker from './serviceWorker';
 import { Route, BrowserRouter as Router, Link, Switch } from 'react-router-dom';
 import Header from './pages/layouts/Header';
@@ -14,6 +12,7 @@ import PrivateRoute from './pages/Auth/PrivateRoute';
 import Auth from './pages/Auth/Auth';
 import CreateAccount from './pages/Auth/CreateAccount';
 import Login from './pages/Auth/Login';
+import PlayerList from './pages/Player/PlayerList';
 
 const theme = createMuiTheme({
     palette: {
@@ -37,7 +36,8 @@ ReactDOM.render(
                         <Route exact path="/login" component={Login} />
                         <Route exact path="/create-account" component={CreateAccount} />
                         <Route exact path="/" component={Home} />
-                        <PrivateRoute exact path="/player-add" component={PlayerAdd} />
+                        <PrivateRoute exact path="/players" component={PlayerList} />
+                        <PrivateRoute exact path="/player/add" component={PlayerAdd} />
                     </Switch>
                 </div>
             </AuthProvider>
