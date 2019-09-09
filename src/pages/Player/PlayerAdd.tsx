@@ -32,18 +32,24 @@ const useStyles = makeStyles((theme: Theme) => ({
     boxShadow: "0px 0px 3px #bbb",
     padding: "6px 10px 0px 10px",
     height: "40px",
-},
-pageHeadingTitle:{
+  },
+  pageTitle: {
+    position: "relative"
+  },
+  pageHeadingTitle: {
 
-},
-addButton: {
-  position: "absolute",
-  right: "5px",
-  bottom: 0
-},
-backButton: {
-  padding: 0
-},
+  },
+  addButton: {
+    position: "absolute",
+    right: "5px",
+    bottom: 0
+  },
+  wrapper: {
+    padding: 16
+  },
+  backButton: {
+    padding: 0
+  },
   buttonWrapper: {
     position: "relative",
     display: "inline-block"
@@ -131,7 +137,6 @@ function PlayerAdd(props: Props) {
     try {
       db.collection("players")
         .add({
-          // trainerUid: firebase.auth().currentUser!.uid,
           name: values.name,
           height: values.height,
           deleted: false,
@@ -195,61 +200,32 @@ function PlayerAdd(props: Props) {
 
   const redirectToTargetPage = () => {
     let prevPath = "/players";
-    const storagePrePath = sessionStorage.getItem("prevPath");
-    if (storagePrePath) {
-      prevPath = storagePrePath;
-      sessionStorage.removeItem("prevPath");
-    } else if (location.state && location.state.prevPath) {
-      prevPath = location.state.prevPath;
-    }
     history.push(prevPath);
   };
 
 
   return (
     <React.Fragment>
-      {done ? (
-        <div>
-          {values.name ? (
-            <div>
-              <Typography variant="body1" gutterBottom>
-                {"Saved succefully"}
-              </Typography>
-              <Button onClick={() => history.push("/player-add")}>
-                {"Back to the list"}
-              </Button>
-            </div>
-          ) : (
-              <div>
-                <Typography variant="body1" gutterBottom>
-                  {"menuAdded"}
-                </Typography>
-                <Button onClick={() => history.push("/menu")}>
-                  {"Back to the list"}
-                </Button>
-                <Button >{"Add more"}</Button>
-              </div>
-            )}
-        </div>
-      ) : (
+      <div className={classes.wrapper}>
+        <Typography
+          component="h1"
+          variant="h5"
+          className={classes.pageTitle}
+          gutterBottom
+        >
+          <IconButton onClick={() => history.goBack()}>
+            <ArrowBackIcon />
+          </IconButton>
+          {"Player Add"}
+
+          <IconButton
+                className={classes.addButton}
+                onClick={() => history.push("/player/add")}
+              >
+                <AddCircleOutlineIcon />
+              </IconButton>
+        </Typography>
           <Box>
-            <div className={classes.pageHeading}>
-                <Typography
-                    variant="h5"
-                    component="h2"
-                    className={classes.pageHeadingTitle}>
-                  
-              Players Add
-                </Typography>
-
-                <IconButton
-                    className={classes.addButton}
-                    onClick={() => history.push("/player/add")}
-                >
-                    <AddCircleOutlineIcon />
-                </IconButton>
-            </div>
-
             <form noValidate onSubmit={handleSubmit}>
               {errors.form ? (
                 <Typography
@@ -329,10 +305,9 @@ function PlayerAdd(props: Props) {
                 </FormControl>
               </Grid>
             </form>
-            
-          </Box>
 
-        )}
+          </Box>
+        </div>
     </React.Fragment>
   );
 }

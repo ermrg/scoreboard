@@ -13,6 +13,8 @@ import Auth from './pages/Auth/Auth';
 import CreateAccount from './pages/Auth/CreateAccount';
 import Login from './pages/Auth/Login';
 import PlayerList from './pages/Player/PlayerList';
+import PlayerDetail from './pages/Player/PlayerDetail';
+import PlayerEdit from './pages/Player/PlayerEdit';
 
 const theme = createMuiTheme({
     palette: {
@@ -38,6 +40,8 @@ ReactDOM.render(
                         <Route exact path="/" component={Home} />
                         <PrivateRoute exact path="/players" component={PlayerList} />
                         <PrivateRoute exact path="/player/add" component={PlayerAdd} />
+                        <PrivateRoute exact path="/player/detail/:id" component={PlayerDetail} />
+                        <PrivateRoute exact path="/player/edit/:id" component={PlayerEdit} />
                     </Switch>
                 </div>
             </AuthProvider>

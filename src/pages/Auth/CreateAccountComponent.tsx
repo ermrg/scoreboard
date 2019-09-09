@@ -184,13 +184,6 @@ function CreateAccountComponent(props: Props) {
 
   const redirectToTargetPage = () => {
     let prevPath = "/";
-    const storagePrePath = sessionStorage.getItem("prevPath");
-    if (storagePrePath) {
-      prevPath = storagePrePath;
-      sessionStorage.removeItem("prevPath");
-    } else if (location.state && location.state.prevPath) {
-      prevPath = location.state.prevPath;
-    }
     history.push(prevPath);
   };
 

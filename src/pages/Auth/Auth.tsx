@@ -247,7 +247,7 @@ function Auth(props: Props) {
         <Fab
           variant="extended"
           color="primary"
-          onClick={() => history.push("/create-account")}
+          onClick={() => history.push("/login")}
           className={"email"}
         >
           {"Sign in with Email"}
