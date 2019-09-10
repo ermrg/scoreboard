@@ -20,6 +20,7 @@ import TeamAdd from './pages/Team/TeamAdd';
 import TeamDetail from './pages/Team/TeamDetail';
 import TeamEdit from './pages/Team/TeamEdit';
 import TeamPlayers from './pages/Team/TeamPlayers';
+import TeamPlayersAdd from './pages/Team/TeamPlayersAdd';
 
 const theme = createMuiTheme({
     palette: {
@@ -56,6 +57,7 @@ ReactDOM.render(
                         <PrivateRoute exact path="/team/detail/:id" component={TeamDetail} />
                         <PrivateRoute exact path="/team/edit/:id" component={TeamEdit} />
                         <PrivateRoute exact path="/team/players/:id" component={TeamPlayers} />
+                        <PrivateRoute exact path="/team/players/add/:id" component={TeamPlayersAdd} />
                     </Switch>
                 </div>
             </AuthProvider>

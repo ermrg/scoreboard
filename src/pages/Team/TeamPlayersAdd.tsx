@@ -1,9 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { db } from "../firebaseApp";
-import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
-import ArrowBackIcon from "@material-ui/icons/ArrowBack";
-import { Card, makeStyles, CardContent, Typography, IconButton } from '@material-ui/core';
+import React, { useEffect, useState } from "react";
 import { RouteComponentProps } from 'react-router';
+import { async } from "q";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+
+import { db } from "../firebaseApp";
+import { Typography, IconButton, makeStyles, Card, CardContent } from "@material-ui/core";
+import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
+
+
 
 const useStyles = makeStyles({
     wrapper: {
@@ -41,48 +45,40 @@ const useStyles = makeStyles({
         fontWeight: "bolder"
     }
 });
+interface IProps extends RouteComponentProps<{ id: string }> { }
 
 interface ITeam {
-    id?: string;
-    name: string;
-}
-
-interface IPlayer {
-    id?: string;
-    name: string;
+    id: string,
+    name: string,
 }
 
 interface ITeamPlayer {
-    id: string;
-    teamId: string;
-    playerId: string;
+    id: string,
+    playerId: string,
+    teamId: string,
 }
-interface IProps extends RouteComponentProps<{ id: string }> { }
 
+interface IPlayer {
+    id: string,
+    name: string
+}
 
-function TeamPlayers(props: IProps) {
-    const { history, match } = props;
-    const [teamPlayerList, setTeamPlayerList] = useState([] as IPlayer[])
-    const [team, setTeam] = useState({} as ITeam)
+function TeamPlayersAdd(props: IProps) {
     const classes = useStyles();
+    const { history, match } = props;
+    const [teamData, setTeamData] = useState({} as ITeam);
+    const [playerList, setPlayerList] = useState([] as IPlayer[])
+    const [teamPlayersList, setTeamPlayersList] = useState([] as IPlayer[])
+
     useEffect(() => {
         getTeam();
-        getPlayerList();
+        getTeamPlayerList()
+        getPlayers();
     }, [match.params.id]);
 
-    const getTeam = async () => {
-        const teamDoc = await db
-            .collection("teams")
-            .doc(match.params.id)
-            .get()
-        const teamData = teamDoc.data() as ITeam;
-        console.log(teamData)
-        setTeam(teamData)
-    }
-
-    const getPlayerList = async () => {
-
-        const teamPlayers = await db
+    const getTeamPlayerList = async () => {
+        try {
+            const teamPlayers = await db
             .collection("teamPlayers")
             .where("teamId", "==", match.params.id)
             .get();
@@ -101,10 +97,45 @@ function TeamPlayers(props: IProps) {
             })
         );
 
-        setTeamPlayerList(list);
-    };
+        setTeamPlayersList(list);
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
-    return (
+    const getTeam = async () => {
+        try {
+            const teamDoc = await db
+                .collection("teams")
+                .doc(match.params.id)
+                .get();
+
+            const teamData = teamDoc.data() as ITeam;
+            setTeamData(teamData);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const getPlayers = async () => {
+        try {
+            const playersData = await db
+                .collection("players")
+                .get();
+            const list: IPlayer[] = [];
+            await Promise.all(
+                playersData.docs.map(async doc => {
+                    const data = doc.data() as IPlayer;
+                    list.push(data);
+                })
+            );
+            setPlayerList(list)
+        } catch(error){
+            console.log(error)
+        }
+    }
+
+    return(
         <React.Fragment>
             <div className={classes.wrapper}>
                 <Typography
@@ -116,7 +147,7 @@ function TeamPlayers(props: IProps) {
                     <IconButton onClick={() => history.goBack()}>
                         <ArrowBackIcon />
                     </IconButton>
-                    {"Team"} : {team.name}
+                    {"Players"}
                     <IconButton
                         className={classes.addButton}
                         onClick={() => history.push(`/team/players/add/${match.params.id}`)}
@@ -125,7 +156,7 @@ function TeamPlayers(props: IProps) {
                     </IconButton>
                 </Typography>
 
-                {teamPlayerList.map((teamData: IPlayer, placeKey: number) => (
+                {playerList.map((teamData: IPlayer, placeKey: number) => (
                     <Card
                         className={classes.card}
                         key={placeKey}
@@ -148,7 +179,8 @@ function TeamPlayers(props: IProps) {
                 ))}
             </div>
         </React.Fragment>
+    
     )
 }
 
-export default TeamPlayers;
+export default TeamPlayersAdd;
