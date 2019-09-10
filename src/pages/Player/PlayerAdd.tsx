@@ -78,6 +78,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Player {
   name: string,
   height: string,
+  country: string
 }
 
 interface FormErrors extends Player {
@@ -95,7 +96,8 @@ function PlayerAdd(props: Props) {
 
   const [values, setValues] = useState({
     name: "",
-    height: ""
+    height: "",
+    country:""
   } as Player);
 
   const [errors, setErrors] = useState({} as FormErrors);
@@ -127,6 +129,7 @@ function PlayerAdd(props: Props) {
         .add({
           name: values.name,
           height: values.height,
+          country: values.country,
           deleted: false,
           createdAt: timestamp()
         })
@@ -252,6 +255,28 @@ function PlayerAdd(props: Props) {
             {errors.height && (
               <FormHelperText className={classes.formHelperText} error>
                 {errors.height}
+              </FormHelperText>
+            )}
+
+            <TextField
+              id="country"
+              name="Country"
+              type="country"
+              label={"Country"}
+              placeholder=""
+              fullWidth
+              margin="normal"
+              variant="outlined"
+              InputLabelProps={{
+                shrink: true
+              }}
+              value={values.country}
+              onChange={handleChange}
+              error={!!errors.country}
+            />
+            {errors.country && (
+              <FormHelperText className={classes.formHelperText} error>
+                {errors.country}
               </FormHelperText>
             )}
 
