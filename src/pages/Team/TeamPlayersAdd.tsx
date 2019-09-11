@@ -78,29 +78,42 @@ function TeamPlayersAdd(props: IProps) {
 
     const getTeamPlayerList = async () => {
         try {
-            const teamPlayers = await db
-            .collection("teamPlayers")
-            .where("teamId", "==", match.params.id)
-            .get();
-
-        const list: IPlayer[] = [];
-        await Promise.all(
-            teamPlayers.docs.map(async doc => {
-                const data = doc.data() as ITeamPlayer;
-
-                const playerDoc = await db
-                    .collection("players")
-                    .doc(data.playerId)
-                    .get()
-                const playerData = playerDoc.data() as IPlayer;
-                list.push(playerData);
-            })
-        );
-
-        setTeamPlayersList(list);
+            const list: IPlayer[] = [];
+            db
+                .collection("teamPlayers")
+                .where("teamId", "==", match.params.id)
+                .get()
+                .then(snap => {
+                    snap.docs.forEach(doc => {
+                        const data = doc.data() as ITeamPlayer;
+                        db
+                            .collection("players")
+                            .doc(data.playerId)
+                            .get()
+                            .then(doc => {
+                                const playerData = doc.data() as IPlayer;
+                                playerData.id = doc.id
+                                console.log(playerData)
+                                list.push(playerData);
+                            })
+                    })
+                }).then(() => {
+                    console.log(list)
+                    setTeamPlayersList(list);
+                });
         } catch (error) {
             console.log(error);
         }
+    }
+
+    const handleCheck = (player: IPlayer) => {
+        console.log(teamPlayersList, player)
+        let check = true;
+        teamPlayersList.forEach(item => {
+            if (player.id === item.id)
+                check = false
+        });
+        return check
     }
 
     const getTeam = async () => {
@@ -126,16 +139,19 @@ function TeamPlayersAdd(props: IProps) {
             await Promise.all(
                 playersData.docs.map(async doc => {
                     const data = doc.data() as IPlayer;
-                    list.push(data);
+                    data.id = doc.id
+
+                    if (!handleCheck(data))
+                        list.push(data);
                 })
             );
             setPlayerList(list)
-        } catch(error){
+        } catch (error) {
             console.log(error)
         }
     }
 
-    return(
+    return (
         <React.Fragment>
             <div className={classes.wrapper}>
                 <Typography
@@ -172,14 +188,14 @@ function TeamPlayersAdd(props: IProps) {
                                 {teamData.name}
                             </Typography>
                             <Typography component="div" className={classes.placeAddress}>
-                                <div>{"Info"}</div>
+                                <div>{teamData.id}</div>
                             </Typography>
                         </CardContent>
                     </Card>
                 ))}
             </div>
         </React.Fragment>
-    
+
     )
 }
 

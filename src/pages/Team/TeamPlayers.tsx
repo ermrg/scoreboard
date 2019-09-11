@@ -76,7 +76,6 @@ function TeamPlayers(props: IProps) {
             .doc(match.params.id)
             .get()
         const teamData = teamDoc.data() as ITeam;
-        console.log(teamData)
         setTeam(teamData)
     }
 
@@ -97,6 +96,7 @@ function TeamPlayers(props: IProps) {
                     .doc(data.playerId)
                     .get()
                 const playerData = playerDoc.data() as IPlayer;
+                playerData.id = playerDoc.id
                 list.push(playerData);
             })
         );
@@ -141,7 +141,7 @@ function TeamPlayers(props: IProps) {
                                 {teamData.name}
                             </Typography>
                             <Typography component="div" className={classes.placeAddress}>
-                                <div>{"Info"}</div>
+                                <div>{teamData.id}</div>
                             </Typography>
                         </CardContent>
                     </Card>
